@@ -1,4 +1,4 @@
-return { 
-  "windwp/nvim-ts-autotag",
-  event = "InsertEnter"
+return {
+	"windwp/nvim-ts-autotag",
+	event = "InsertEnter",
 }

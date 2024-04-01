@@ -47,7 +47,3 @@ vim.notify = function(msg, ...)
 
 	notify(msg, ...)
 end
-
--- for neorg
-opt.conceallevel = 3
--- opt.autochdir = true

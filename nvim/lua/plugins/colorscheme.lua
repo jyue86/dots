@@ -3,7 +3,7 @@ return {
 	name = "nightfly",
 	lazy = false,
 	priority = 1000,
-	config = function(_, opts)
+	config = function(_)
 		vim.g.nightflyVirtualTextColor = true
 		vim.cmd([[colorscheme nightfly]])
 	end,

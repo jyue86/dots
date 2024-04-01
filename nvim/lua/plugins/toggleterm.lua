@@ -2,7 +2,7 @@ return {
 	"akinsho/toggleterm.nvim",
 	version = "*",
 	keys = {
-		{ "<leader>git<cr>", desc = "Open Lazygit" },
+		{ "<leader>git", desc = "Open Lazygit" },
 	},
 	config = function()
 		local Terminal = require("toggleterm.terminal").Terminal
@@ -20,6 +20,6 @@ return {
 		end
 
 		local keymap = vim.keymap
-		keymap.set("n", "<leader>git<cr>", GitClient)
+		keymap.set("n", "<leader>git", GitClient)
 	end,
 }

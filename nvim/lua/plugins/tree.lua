@@ -4,13 +4,10 @@ return {
     { "nvim-tree/nvim-web-devicons" },
   },
   keys = {
-    { "<a-1>", "<cmd>NvimTreeToggle<cr>", desc = "Toggle NvimTree" },
+    { "<leader>e", desc = "Toggle NvimTree" },
   },
-  version = "nightly",
   config = function()
     vim.g.netrw_banner = 0
-    -- vim.g.loaded_netrw = 1
-    -- vim.g.loaded_netrwPlugin = 1
     vim.opt.termguicolors = true
 
     local tree_status_ok, tree = pcall(require, "nvim-tree")
@@ -50,5 +47,7 @@ return {
         },
       },
     })
+		local keymap = vim.keymap
+		keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<cr>")
   end,
 }

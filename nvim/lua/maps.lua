@@ -14,4 +14,4 @@ keymap.set("n", "<s-e>", "<cmd>bnext<cr>")
 keymap.set("n", "<leader>bd", "<cmd>bd<cr>")
 
 -- Toggle relative line number
-keymap.set("n", "<leader>rnu<cr>", "<cmd>set invrelativenumber<cr>")
+keymap.set("n", "<leader>nr", "<cmd>set invrelativenumber<cr>")

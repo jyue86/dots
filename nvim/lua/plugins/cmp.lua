@@ -35,7 +35,7 @@ return {
       Snippet = "",
       Color = "",
       File = "",
-      Reference = "",
+      Reference = "",
       Folder = "",
       EnumMember = "",
       Constant = "",

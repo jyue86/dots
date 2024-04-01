@@ -1,7 +1,6 @@
 return {
 	"nvim-telescope/telescope.nvim",
 	event = "BufReadPre",
-	version = "0.1.1",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		{
@@ -10,8 +9,10 @@ return {
 		},
 	},
 	keys = {
-		{ "<leader>f<cr>", "<cmd>lua require('telescope.builtin').find_files()<cr>", desc = "Search for files" },
-		{ "<leader>g<cr>", "<cmd>lua require('telescope.builtin').live_grep()<cr>", desc = "Live grep in codebase" },
+		-- { "<leader>f<cr>", "<cmd>lua require('telescope.builtin').find_files()<cr>", desc = "Search for files" },
+		-- { "<leader>g<cr>", "<cmd>lua require('telescope.builtin').live_grep()<cr>", desc = "Live grep in codebase" },
+		{ "<leader>f", function() require("telescope.builtin").find_files() end, desc = "Search for files" },
+		{ "<leader>g<cr>", function() require("telescope.builtin").live_grep() end, desc = "Live grep in codebase" },
 	},
 	config = function(_, opts)
 		local telescope_status_ok, telescope = pcall(require, "telescope")

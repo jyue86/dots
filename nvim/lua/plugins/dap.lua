@@ -1,74 +1,28 @@
 return {
-	"mfussenegger/nvim-dap",
-	dependencies = {
-		{
-			"rcarriga/nvim-dap-ui",
-			config = function()
-				require("dapui").setup()
-			end,
-		},
-		{
-			"theHamsta/nvim-dap-virtual-text",
-			config = function()
-				require("nvim-dap-virtual-text").setup()
-			end,
-		},
-		{
-			"jay-babu/mason-nvim-dap.nvim",
-		},
-		{
-			"folke/neodev.nvim",
-		},
-	},
-	keys = {
-		{ "<leader>dap<cr>", desc = "Open DAP UI" },
-		{ "<leader>b<cr>", desc = "Toggle Breakpoint" },
-		{ "<leader>B<cr>", desc = "Toggle Conditional Breakpoint" },
-		{ "<leader>lp<cr>", desc = "Set Breakpoint With Logs" },
-		{ "<leader>dr<cr>", desc = "Open Repl" },
-	},
-	config = function()
-		local mdp = require("mason-nvim-dap")
-		local dap, dapui = require("dap"), require("dapui")
-		local map = vim.keymap
+  {
+    "mfussenegger/nvim-dap",
+    event="VeryLazy",
+    config = function()
+		  local map = vim.keymap
+		  local dap = require("dap")
 
-		require("neodev").setup({
-			library = { plugins = { "nvim-dap-ui" }, types = true },
-		})
+      function Restart()
+        dap.disconnect()
+        dap.close()
+        dap.continue()
+      end
 
-		mdp.setup({
-			ensure_installed = { "python" },
-			automatic_setup = true,
-			handlers = {
-				function(config)
-					mdp.default_setup(config)
-				end,
-				python = function(config)
-					config.adapters = {
-						type = "executable",
-						command = "/usr/bin/python3",
-						args = {
-							"-m",
-							"debugpy.adapter",
-						},
-					}
-
-					mdp.default_setup(config)
-				end,
-			},
-		})
-
-		map.set("n", "<leader>dap<cr>", dapui.toggle)
-		map.set("n", "<F2>", "<cmd>lua require'dap'.disconnect(); require'dap'.close();<cr>")
-		map.set("n", "<F3>", dap.step_over)
-		map.set("n", "<F4>", dap.step_into)
-		map.set("n", "<F5>", dap.step_out)
-		map.set("n", "<F8>", "<cmd>lua require'dap'.disconnect(); require'dap'.close(); require'dap'.continue()<cr>")
-		map.set("n", "<F9>", dap.continue)
-		map.set("n", "<leader>b<cr>", "<cmd>lua require'dap'.toggle_breakpoint()<cr>")
-		map.set(
+      map.set("n", "<F2>", dap.disconnect)
+      map.set("n", "<F3>", dap.step_over)
+      map.set("n", "<F4>", dap.step_into)
+      map.set("n", "<F5>", dap.step_out)
+      -- map.set("n", "<F8>", "<cmd>lua require'dap'.disconnect(); require'dap'.close(); require'dap'.continue()<cr>")
+      map.set("n", "<F8>", Restart)
+      map.set("n", "<F9>", dap.continue)
+      map.set("n", "<leader>db", dap.toggle_breakpoint)
+      map.set(
 			"n",
-			"<leader>B<cr>",
+			"<leader>dbc<cr>",
 			"<cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<cr>"
 		)
 		map.set(
@@ -77,35 +31,61 @@ return {
 			"<cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<cr>"
 		)
 		map.set("n", "<leader>dr<cr>", "<cmd>lua require'dap'.repl.open()<cr>")
-	end,
+    end
+  },
+  {
+    "rcarriga/nvim-dap-ui",
+    event="VeryLazy",
+    dependencies = "mfussenegger/nvim-dap",
+    config = function()
+      local dap = require("dap")
+      local dapui = require("dapui")
+      dapui.setup()
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
+    end
+  },
+  {
+    "mfussenegger/nvim-dap-python",
+    event="VeryLazy",
+    ft = "python",
+    dependencies = {
+      "mfussenegger/nvim-dap",
+      "rcarriga/nvim-dap-ui",
+    },
+    config = function(_, opts)
+      local path = "python3"
+      require("dap-python").setup(path)
+      -- require("core.utils").load_mappings("dap_python")
+    end,
+  },
+  {
+    "nvim-neotest/nvim-nio",
+    event="VeryLazy",
+  },
+  {
+    "theHamsta/nvim-dap-virtual-text",
+    event="VeryLazy",
+    config = function()
+      require("nvim-dap-virtual-text").setup()
+    end,
+  },
+  {
+    "jay-babu/mason-nvim-dap.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "mfussenegger/nvim-dap",
+    },
+    opts = {
+      handlers = {}
+    },
+  },
 }
-
--- { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap" } },
--- "folke/neodev.nvim",
--- "jay-babu/mason-nvim-dap.nvim",
--- "theHamsta/nvim-dap-virtual-text",
--- "jose-elias-alvarez/typescript.nvim",
---
---
--- handlers = {
---   function(source_name)
---     mdp.automatic_setup(source_name)
---     -- require("mason-nvim-dap.automatic_setup")(source_name)
---   end,
---   python = function(source_name)
---     dap.adapters.python = {
---       type = "executable",
---       command = "/usr/bin/python3",
---       args = { "-m", "debugpy.adapter" },
---     }
---
---     dap.configurations.python = {
---       {
---         type = "python",
---         request = "launch",
---         name = "Launch file",
---         program = "${file}",
---       },
---     }
---   end,
--- },
